@@ -20,9 +20,12 @@ class Stack:
             return self.seznam[-1].Barva()
         else:
             return None
+    
+    def Length(self):
+        return len(self.seznam)
         
     def __str__(self) -> str:
-        return str(list(map(str,self.seznam)))
+        return str(list(map(str,self.seznam))).replace("cerny", "o").replace("bily", "●")
     
 class Vrhcaby:
 
@@ -59,10 +62,10 @@ class Vrhcaby:
         for _ in range(5):
             self.hracideska[5].Push(Kamen("bily"))
 
-    def Test_Tah(self, zacatek, konec):
+    def Move_kamen(self, zacatek, konec):
         self.hracideska[konec].Push(self.hracideska[zacatek].Pop())
 
-    def Mozne_tahy(self, kroky):
+    def Display_mozne_tahy(self, kroky):
         tahy = {}
         for i, pole in enumerate(self.hracideska):
             if pole == None:
@@ -71,10 +74,13 @@ class Vrhcaby:
                 tahy[i] = []
         for key in tahy.keys():
             for i in kroky:
-                tahy[key].append(key + i)
+                destinace = key + i
+                if destinace < 23 and destinace > -1:
+                    if self.hracideska[destinace].Peek() != "bily" and self.hracideska[destinace].Length < 2:
+                        tahy[key].append(key + i)
         return tahy
 
-    def Mozne_kroky(self, kroky):
+    def Vypocti_mozne_kroky(self, kroky):
         if len(kroky) > 2:
             kroky = list(itertools.accumulate(kroky))
             return kroky
@@ -97,6 +103,59 @@ class Vrhcaby:
         print("cil cerny:" + str(self.cil_cerny))
         print("bar: " + str(self.bar))
 
+    def Tah(self, zacatek, konec, dice):
+     krok = konec - zacatek
+     if krok in dice:
+          self.Move_kamen(zacatek, konec)
+          dice.remove(krok)
+     else:
+        suma_dice = sum(dice)
+        while suma_dice - krok != sum(dice):
+             temp = dice.pop()
+             self.Move_kamen(zacatek, zacatek + temp)
+             zacatek += temp
+        return dice
+
+    def Play(self):
+        a = Vrhcaby()
+        a.NaplnDesku()
+        while len(a.cil_bily) < 15 or len(a.cil_cerny < 15):
+            kolo = True
+            if kolo:
+                print("hraje cerny")
+                kostky = a.Dvojkostka()
+                print(f"dostali jste: " + str(kostky))
+                if "cerny" in list(map(str, a.bar)): #needs work
+                    #tah z baru od 0
+                    pass
+                else:
+                    while len(kostky) > 0:
+                        print(a.Display_mozne_tahy(a.Vypocti_mozne_kroky(kostky)))
+                        vyber = input("zadejte prikaz: ").split(" ")
+                        a.Move_kamen(vyber[0], vyber[1])
+                        a.Render()
+                        
+                kolo = False
+            else:
+                print("hraje bily")
+                kostky = a.Dvojkostka()
+                print(f"dostali jste:" + str(kostky))
+                if "bily" in list(map(str, a.bar)): #needs work
+                    #tah z baru od 0
+                    pass
+                else:
+                    while len(kostky) > 0:
+                        print(a.Display_mozne_tahy(a.Vypocti_mozne_kroky(kostky)))
+                        vyber = input("zadejte prikaz: ").split(" ")
+                        a.Move_kamen(vyber[0], vyber[1])
+                        a.Render()
+                        
+                kolo = True
+        if len(a.cil_bily) < 15:
+            print("vyhral bily")
+        else:
+            print("vyhral cerny")
+
 class Kamen:
 
     def __init__(self, barva) -> None:
@@ -110,41 +169,10 @@ class Kamen:
         
 a = Vrhcaby()
 a.NaplnDesku()
-while len(a.cil_bily) < 15 or len(a.cil_cerny < 15):
-    kolo = True
-    if kolo:
-        print("hraje cerny")
-        kostky = a.Dvojkostka()
-        print(f"dostali jste: " + str(kostky))
-        if "cerny" in list(map(str, a.bar)): #needs work
-            #tah z baru od 0
-            pass
-        else:
-            while len(kostky) > 0:
-                print(a.Mozne_tahy(a.Mozne_kroky(kostky)))
-                vyber = input("zadejte prikaz: ").split(" ")
-                a.Test_Tah(vyber[0], vyber[1])
-                a.Render()
-                #fce that removes from kostky
-        kolo = False
-    else:
-        print("hraje bily")
-        kostky = a.Dvojkostka()
-        print(f"dostali jste:" + str(kostky))
-        if "bily" in list(map(str, a.bar)): #needs work
-            #tah z baru od 0
-            pass
-        else:
-            while len(kostky) > 0:
-                print(a.Mozne_tahy(a.Mozne_kroky(kostky)))
-                vyber = input("zadejte prikaz: ").split(" ")
-                a.Test_Tah(vyber[0], vyber[1])
-                a.Render()
-                #fce that removes from kostky
-        kolo = True
-if len(a.cil_bily) < 15:
-    print("vyhral bily")
-else:
-    print("vyhral cerny")
-
 a.Render()
+dice = [4, 5]
+print(a.Display_mozne_tahy(a.Vypocti_mozne_kroky(dice)))
+dice = a.Tah(0, 4, dice)
+a.Render()
+print(dice)
+print(a.Display_mozne_tahy(a.Vypocti_mozne_kroky(dice)))
