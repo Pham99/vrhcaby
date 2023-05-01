@@ -1,3 +1,4 @@
+import os
 import random
 import itertools
 
@@ -6,10 +7,9 @@ class Kostka:
         self.pocet_hran = pocet_hran
 
     def hod_kostkou(self):
-        return random.randint(1,6)
+        return random.randint(1, self.pocet_hran)
 
 class HraciPole:
-
     def __init__(self) -> None:
         self.__seznam = list()
 
@@ -26,13 +26,18 @@ class HraciPole:
         if len(self.__seznam) > 0:
             return self.__seznam[-1].get_barva()
         else:
-            return None
+            return "neutral"
         
     def length(self):
         return len(self.__seznam)
         
     def __str__(self) -> str:
-        return str(list(map(str,self.__seznam))).replace("cerny", "o").replace("bily", "●")
+        if self.peek() == "cerny":
+            symbol = "o"
+        else:
+            symbol = "●"
+        return symbol * self.length()
+        #return str(list(map(str,self.__seznam))).replace("cerny", "o").replace("bily", "●")
     
 class Vrhcaby:
 
@@ -77,31 +82,43 @@ class Vrhcaby:
 
     def napln_desku_debug(self):
         self.hracideska[0].push(Kamen("cerny"))
-        self.hracideska[7].push(Kamen("bily"))
+        self.hracideska[2].push(Kamen("bily"))
+        self.hracideska[4].push(Kamen("bily"))
         self.hracideska[6].push(Kamen("bily"))
-        self.hracideska[5].push(Kamen("bily"))
         self.hracideska[8].push(Kamen("bily"))
 
 
     def move_kamen(self, zacatek, konec):
-        if self.hracideska[konec].length() < 2:
-            self.bar_bily.push(self.hracideska[konec].pop())
-        self.hracideska[konec].push(self.hracideska[zacatek].pop())
+        if self.hracideska[konec].peek() == self.currentplayer.barva or self.hracideska[konec].peek() == "neutral":
+            self.hracideska[konec].push(self.hracideska[zacatek].pop())
+        else:
+            if self.currentplayer.barva == "cerna":
+                self.bar_bily.push(self.hracideska[konec].pop())
+            else:
+                self.bar_cerny.push(self.hracideska[konec].pop())
+            self.hracideska[konec].push(self.hracideska[zacatek].pop())
+        # if self.hracideska[konec].length() < 2 and self.hracideska[konec].peek() != self.currentplayer.barva and self.hracideska[konec].peek() != "neutral":
+        #     self.bar_bily.push(self.hracideska[konec].pop())
+        # self.hracideska[konec].push(self.hracideska[zacatek].pop())
 
     def display_mozne_tahy(self, kroky):
+        if self.currentplayer.barva == "cerny":
+            smer = 1
+        else:
+            smer = -1
         tahy = {}
         for i, pole in enumerate(self.hracideska):
             if pole == None:
                 continue
-            elif pole.peek() == "cerny":
+            elif pole.peek() == self.currentplayer.barva:
                 tahy[i] = []
         keys = list(tahy.keys()).copy()
         for key in keys:
             for i in kroky:
-                destinace = key + i
+                destinace = key + i * smer
                 if destinace < 24 and destinace > -1:
-                    if self.hracideska[destinace].peek() != "bily" or self.hracideska[destinace].length() < 2:
-                        tahy[key].append(key + i)
+                    if self.hracideska[destinace].peek() == self.currentplayer.barva or self.hracideska[destinace].length() < 2:
+                        tahy[key].append(destinace)
             if tahy[key] == []:
                 tahy.pop(key, None)
         return tahy
@@ -115,9 +132,6 @@ class Vrhcaby:
         else:
             pass
         return kroky
-
-    def __str__(self) -> str:
-        return str(list(map(str,self.hracideska)))
     
     def render(self):
         print("\ncil bily:" + str(self.cil_bily))
@@ -131,14 +145,18 @@ class Vrhcaby:
         print("bar_cerny: " + str(self.bar_cerny) + "\n")
 
     def tah(self, zacatek, konec, kostka):
-        krok = konec - zacatek
+        if self.currentplayer.barva == "cerny":
+            smer = 1
+        else:
+            smer = -1
+        krok = abs(konec - zacatek)
         if krok in kostka:
             self.move_kamen(zacatek, konec)
             kostka.remove(krok)
         else:
             suma_dice = sum(kostka)
             while suma_dice - krok != sum(kostka):
-                temp = kostka.pop()
+                temp = kostka.pop() * smer
                 self.move_kamen(zacatek, zacatek + temp)
                 zacatek += temp
         return kostka
@@ -152,9 +170,11 @@ class Vrhcaby:
     def play(self):
         self.napln_desku_debug()
         while not self.gameover:
-            print(f"hraje: {self.currentplayer}")
-            kostky = self.dvojkostka()
+            kostky = [2,2,2,2]
+            #kostky = self.dvojkostka()
             while len(kostky) > 0 and kostky != None:
+                self.render()
+                print(f"hraje: {self.currentplayer}")
                 print(f"vase kostky: " + str(kostky))
                 #if "cerny" in list(map(str, a.bar_cerny)): #needs work
                     #tah z baru od 0
@@ -170,10 +190,14 @@ class Vrhcaby:
                     print("zadal jste spatne")
                     continue
                 kostky = self.tah(vyber[0], vyber[1], kostky)
-                self.render()
+                os.system("cls")
             self.switch_players()
             self.gameover_check()
         self.eval_winner()
+
+    def test(self):
+        print(self.currentplayer)
+        print(self.currentplayer == "cerny")
                 
     def eval_winner(self):
         if len(self.cil_bily) < 15:
@@ -184,6 +208,9 @@ class Vrhcaby:
     def gameover_check(self):
         if len(self.cil_bily) > 14 or len(self.cil_cerny) > 14:
             self.gameover = True
+
+    def __str__(self) -> str:
+        return str(list(map(str,self.hracideska)))
 
 class Kamen:
 
@@ -203,21 +230,20 @@ class Hrac:
 
     def Play(self):
         vyber = input("zadejte prikaz: ").split(" ")
-        print("plaaay")
         return list(map(int, vyber))
     
     def __str__(self) -> str:
         return self.barva
 
-class Hrac_CPU():
+class Hrac_CPU(Hrac):
 
     def __init__(self) -> None:
-        pass
+        super.__init__()
 
     def Play(self):
         print("beep boop")
         
 a = Vrhcaby()
 a.play()
-
+#a.test()
 
