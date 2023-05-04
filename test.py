@@ -95,15 +95,5 @@ class OObject:
 # print(type(ad["fi"]))
 # print(b)
 
-z = OObject()
-y = OObject()
-c = z
-print(c == z)
-print(c == y)
-c = y
-print(c == z)
-print(c == y)
-c = z
-print(c == z)
-print(y == z)
-os.system("cls")
+lol = []
+print(lol == [])
