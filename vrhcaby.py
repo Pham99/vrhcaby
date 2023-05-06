@@ -2,8 +2,8 @@ from kostka import Kostka
 from kamen import Kamen
 from hrac import Hrac, Hrac_CPU
 from hracipole import HraciPole
+from prettydice import Pretty_dice
 import os
-import random
 import itertools
 
 class Vrhcaby:
@@ -29,7 +29,7 @@ class Vrhcaby:
             return [kostka1, kostka2]
         
     def moznosti(self):
-        print("1 black\n2 white")
+        print("Vyberte barvu\n1: Cerny\n2: Bily")
         vyber1 = vyber_mezi_2()
         if vyber1 == 1:
             colour1 = "cerny"
@@ -37,7 +37,7 @@ class Vrhcaby:
         else:
             colour1 = "bily"
             colour2 = "cerny"
-        print("player or bot")
+        print("Vyberte soupere\n1: Hrac\n2: Pocitac (nefunguje)")
         vyber2 = vyber_mezi_2()
         if vyber2 == 1:
             self.hrac1 = Hrac(colour1)
@@ -114,6 +114,7 @@ class Vrhcaby:
             tahy = {0: []}
         elif 25 in tahy.keys():
             tahy = {25: []}
+            
         keys = list(tahy.keys()).copy()
         for key in keys:
             for i in kroky:
@@ -175,18 +176,15 @@ class Vrhcaby:
     def play(self):
         self.moznosti()
         self.who_goes_first()
-        self.napln_desku_debug()
+        self.napln_desku()
         while not self.gameover:
             #kostky = [2,2,2,2]
             kostky = self.dvojkostka()
             while len(kostky) > 0 and kostky != None:
                 self.render()
                 print(f"hraje: {self.currentplayer}")
+                Pretty_dice.print_dice(kostky)
                 print(f"vase kostky: " + str(kostky))
-                #if "cerny" in list(map(str, a.bar_cerny)): #needs work
-                    #tah z baru od 0
-                    #pass
-                #else:
                 mozne_tahy = self.display_mozne_tahy(self.vypocti_mozne_kroky(kostky))
                 if mozne_tahy == {}:
                     print("zadne mozne tahy")
@@ -222,7 +220,7 @@ class Vrhcaby:
         
 def vyber_mezi_2():
     while True:
-        vyber = int(input("zadejte 1 nebo 2: "))
+        vyber = int(input("\nZadejte 1 nebo 2: "))
         if vyber == 1 or vyber == 2:
             return vyber
         else:
@@ -240,7 +238,7 @@ def main():
         ###     ###    ### ###    ###  ########  ###     ### #########     ###    
     """)
 
-    print("1 play\n2 quit")
+    print("1: PLAY\n2: QUIT")
     vyber = vyber_mezi_2()
     if vyber == 1:
         os.system("cls")
@@ -248,14 +246,6 @@ def main():
         a.play()
     else:
         quit()
-
-    cube = """
-    ┌───────┐
-    │ O O O │
-    │ O O O │
-    │ O O O │
-    └───────┘
-    """
 
 if __name__ == "__main__":
     main()

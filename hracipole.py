@@ -27,4 +27,17 @@ class HraciPole:
             symbol = "●"
         return symbol * self.length()
         #return str(list(map(str,self.__seznam))).replace("cerny", "o").replace("bily", "●")
+
+class Bar(HraciPole):
+    def __init__(self, barva) -> None:
+        super().__init__()
+        self.__cil = list()
+        self.barva = barva
+
+    def push(self, value):
+        if value.get_barva() == self.barva:
+            self.__seznam.append(value)
+        else:
+            self.__cil.append(value)
+
     
