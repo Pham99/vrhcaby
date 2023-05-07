@@ -28,6 +28,8 @@ class Pretty_dice:
 
     @classmethod    
     def print_dice(cls, seznam):
+        if isinstance(seznam, int):
+            seznam = [seznam]
         p0, p1, p2, p3, p4 = "","","","",""
         for i in seznam:
             s1, s2, s3 = cls.__get_dice(i)

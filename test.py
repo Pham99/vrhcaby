@@ -95,5 +95,5 @@ class OObject:
 # print(type(ad["fi"]))
 # print(b)
 
-lol = []
-print(lol == [])
+dick = {1: [1,2,3], 2: "lol", 3: OObject}
+print(list(dick.keys()))
