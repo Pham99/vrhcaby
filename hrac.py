@@ -3,15 +3,19 @@ import random
 class Hrac:
 
     def __init__(self, barva) -> None:
-        self.barva = barva
-        if self.barva == "cerny":
+        self.__barva = barva
+        if self.__barva == "cerny":
             self.interval1 = 0
             self.interval2 = 19
-        elif self.barva == "bily":
+        elif self.__barva == "bily":
             self.interval1 = 7
             self.interval2 = 26
         else:
             raise ValueError
+        
+    @property
+    def barva(self):
+        return self.__barva
 
     def play(self, mozne_tahy):
         vyber = input("Zadejte prikaz: ").split(" ")
@@ -19,19 +23,17 @@ class Hrac:
     
     def muzu_vyvest(self, hraci_deska):
         for pole in hraci_deska[self.interval1:self.interval2]:
-            if pole.peek() == self.barva:
+            if pole.peek() == self.__barva:
                 return False
         return True
     
     def nejvzdalenejsi_kamen(self, keys):
         list(keys)
-        if self.barva == "cerny":
+        if self.__barva == "cerny":
             return min(keys)
         else:
             return max(keys)
 
-    def __str__(self) -> str:
-        return self.barva
 
 class Hrac_CPU(Hrac):
 

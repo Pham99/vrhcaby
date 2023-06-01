@@ -197,6 +197,46 @@ class Vrhcaby:
         print("bar_bily: " + str(self.bar_bily))
         print("bar_cerny: " + str(self.bar_cerny) + "\n")
 
+    def better_render(self):
+        print("  1 1 1")
+        print("  2 1 0 9 8 7   6 5 4 3 2 1")
+        print("╔═════════════╤═════════════╦══╗")
+        start = 12
+        end = 0
+        step = 1
+        start2 = 0
+        end2 = 5
+        border = 6
+        bar = self.bar_cerny
+        for j in range(2):
+            for i in range(start2, end2, step):
+                print("║ ", end="")
+                for index in range(start, end, -step):
+                    if index == border:
+                        print("│", end=" ")
+                    if self.hracideska[index].length() > i:
+                        print(self.hracideska[index], end=" ")
+                    else:
+                        print("∙", end=" ")
+                if i == 0:
+                    print("║" + str(bar).rjust(2, " ") + "║")
+                else:
+                    print("║  ║")
+            if j == 0:
+                print("║             │             ╠══╣")
+            start = 13
+            end = 25
+            step = -1
+            start2 = 4
+            end2 = -1
+            border = 19
+            bar = self.bar_bily
+        print("╚═════════════╧═════════════╩══╝")
+        print("  1 1 1 1 1 1   1 2 2 2 2 2")
+        print("  3 4 5 6 7 8   9 0 1 2 3 4")
+        print("bar_bily: " + self.bar_bily.print_pole())
+        print("bar_cerny: " + self.bar_cerny.print_pole() + "\n")
+
     def switch_players(self):
         if self.currentplayer == self.hrac1:
             self.currentplayer = self.hrac2
@@ -218,8 +258,8 @@ class Vrhcaby:
             #kostky = [2,2,2,2]
             kostky = self.dvojkostka()
             while len(kostky) > 0 and kostky != None:
-                self.render()
-                print(f"---- Hraje: {self.currentplayer} ----")
+                self.better_render()
+                print(f"---- Hraje: {self.currentplayer.barva} ----")
                 self.check()
                 Pretty_dice.print_dice(kostky)
                 print(f"Vase kostky: " + str(kostky))

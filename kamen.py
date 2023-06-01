@@ -7,4 +7,7 @@ class Kamen:
         return self.barva
 
     def __str__(self) -> str:
-        return str(self.barva)
+        if self.barva == "cerny":
+            return "○"
+        else:
+            return "●"

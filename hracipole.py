@@ -21,13 +21,21 @@ class HraciPole:
         return len(self._seznam)
         
     def __str__(self) -> str:
+        # if self.peek() == "cerny":
+        #     symbol = "o"
+        # else:
+        #     symbol = "●"
+        # return symbol * self.length()
+        return str(self._seznam[-1])
+        #return str(list(map(str,self.__seznam))).replace("cerny", "o").replace("bily", "●")
+
+    def print_pole(self):
         if self.peek() == "cerny":
             symbol = "o"
         else:
             symbol = "●"
         return symbol * self.length()
-        #return str(list(map(str,self.__seznam))).replace("cerny", "o").replace("bily", "●")
-
+    
 class Bar(HraciPole):
     def __init__(self, barva) -> None:
         super().__init__()
@@ -49,6 +57,12 @@ class Bar(HraciPole):
     
     def cil_length(self):
         return len(self.__cil)
+    
+    def print_pole(self):
+        return super().print_pole()
+    
+    def __str__(self) -> str:
+        return str(len(self.__cil))
 
 def main():
     pass
