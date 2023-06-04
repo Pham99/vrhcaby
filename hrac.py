@@ -1,7 +1,6 @@
 import random
 
 class Hrac:
-
     def __init__(self, barva) -> None:
         self.__barva = barva
         if self.__barva == "cerny":
@@ -17,7 +16,7 @@ class Hrac:
     def barva(self):
         return self.__barva
 
-    def play(self, mozne_tahy):
+    def play(self, mozne_tahy: dict) -> list:
         vyber = input("Zadejte prikaz: ").split(" ")
         return list(map(int, vyber))
     
@@ -27,7 +26,7 @@ class Hrac:
                 return False
         return True
     
-    def nejvzdalenejsi_kamen(self, keys):
+    def nejvzdalenejsi_kamen(self, keys) -> int:
         list(keys)
         if self.__barva == "cerny":
             return min(keys)
@@ -36,11 +35,10 @@ class Hrac:
 
 
 class Hrac_CPU(Hrac):
-
     def __init__(self, barva) -> None:
         super().__init__(barva)
 
-    def play(self, mozne_tahy):
+    def play(self, mozne_tahy: dict) -> list:
         kamen = random.choice(list(mozne_tahy.keys()))
         kam = random.choice(mozne_tahy[kamen])
         print(f"CPU zvolil: {kamen} {kam}")

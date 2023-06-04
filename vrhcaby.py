@@ -1,25 +1,19 @@
 from kostka import Kostka
-from kamen import Kamen
 from hrac import Hrac, Hrac_CPU
-from hracipole import HraciPole, Bar
 from prettydice import Pretty_dice
 from hracideska import HraciDeska
 import os
-import itertools
+
 
 class Vrhcaby:
-
     def __init__(self) -> None:
         self.hrac1 = None
         self.hrac2 = None
-        self.currentplayer = None
         self.hracideska = HraciDeska()
         self.kostka = Kostka(6)
-        self.left_border = 1
-        self.right_border = 24
         self.gameover = False
 
-    def dvojkostka(self):
+    def dvojkostka(self) -> None:
         kostka1 = self.kostka.hod_kostkou()
         kostka2 = self.kostka.hod_kostkou()
         if kostka1 == kostka2:
@@ -27,9 +21,9 @@ class Vrhcaby:
         else:
             return [kostka1, kostka2]
         
-    def moznosti(self):
+    def moznosti_menu(self) -> None:
         print("Vyberte barvu\n1: Cerny\n2: Bily")
-        vyber1 = vyber_mezi_2()
+        vyber1 = vyber_mezi_n_options(2)
         if vyber1 == 1:
             colour1 = "cerny"
             colour2 = "bily"
@@ -37,7 +31,7 @@ class Vrhcaby:
             colour1 = "bily"
             colour2 = "cerny"
         print("\nVyberte soupere\n1: Hrac\n2: Pocitac\n3: Pocitac vs Pocitac")
-        vyber2 = vyber_mezi_2()
+        vyber2 = vyber_mezi_n_options(3)
         if vyber2 == 1:
             self.hrac1 = Hrac(colour1)
             self.hrac2 = Hrac(colour2)
@@ -48,7 +42,7 @@ class Vrhcaby:
             self.hrac1 = Hrac_CPU(colour1)
             self.hrac2 = Hrac_CPU(colour2)
 
-    def who_goes_first(self):
+    def set_turn_order(self) -> Hrac:
         while True:
             n1 = self.kostka.hod_kostkou()
             n2 = self.kostka.hod_kostkou()
@@ -72,27 +66,26 @@ class Vrhcaby:
             os.system("cls")
             return self.hrac2
 
-    def switch_players(self, hrac):
+    def switch_players(self, hrac: Hrac) -> Hrac:
         if hrac == self.hrac1:
             return self.hrac2
         else:
             return self.hrac1
     
-    def play(self):
-        self.moznosti()
+    def play(self) -> None:
+        self.moznosti_menu()
         self.tutorial()
-        current_player = self.who_goes_first()
+        current_player = self.set_turn_order()
         self.hracideska.napln_desku()
         while not self.gameover:
-            #kostky = [2,2,2,2]
             kostky = self.dvojkostka()
-            while len(kostky) > 0 and kostky != None:
-                self.hracideska.better_render()
+            while len(kostky) > 0:
+                self.hracideska.render_hracipole()
                 print(f"---- Hraje: {current_player.barva} ----")
-                self.hracideska.check(current_player)
+                self.hracideska.check_vyvedeni(current_player)
                 Pretty_dice.print_dice(kostky)
                 print(f"Vase kostky: " + str(kostky))
-                mozne_tahy = self.hracideska.display_mozne_tahy(current_player ,self.hracideska.vypocti_mozne_kroky(kostky))
+                mozne_tahy = self.hracideska.get_mozne_tahy(current_player ,self.hracideska.vypocti_mozne_kroky(kostky))
                 if mozne_tahy == {}:
                     print("Zadne mozne tahy")
                     input("press enter to continue")
@@ -108,11 +101,11 @@ class Vrhcaby:
                 os.system("cls")
             current_player = self.switch_players(current_player)
             self.gameover = self.hracideska.gameover_check()
-        self.hracideska.eval_winner()
-        self.hracideska.better_render()
+        self.hracideska.evaluate_winner()
+        self.hracideska.render_hracipole()
         input("press enter to continue:")
                  
-    def tutorial(self):
+    def tutorial(self) -> None:
         print("\nTUTORIAL:")
         print("dostanete takhle slovnik, jako seznam vsech moznych tahu:")
         example = {1: [3, 6, 8], 7: [9, 12, 14]}
@@ -121,11 +114,13 @@ class Vrhcaby:
         print("zadejte ve tvaru klic mezera prvek v listu")
         print("napr. (1 8) nebo (7 12) bez zavorek")
         input("press enter to continue")
+        os.system("cls")
         
-def vyber_mezi_2():
+        
+def vyber_mezi_n_options(n: int) -> int:
     while True:
         vyber = int(input("\nZadejte cislo: "))
-        if vyber == 1 or vyber == 2 or vyber == 3:
+        if vyber in range(1,n + 1):
             return vyber
         else:
             print("zadali jste neco spatne")
@@ -143,7 +138,7 @@ def main():
     """)
 
     print("1: PLAY\n2: QUIT")
-    vyber = vyber_mezi_2()
+    vyber = vyber_mezi_n_options(2)
     if vyber == 1:
         os.system("cls")
         a = Vrhcaby()

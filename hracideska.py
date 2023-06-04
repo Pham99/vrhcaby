@@ -9,10 +9,12 @@ class HraciDeska:
         self.hracideska = [HraciPole() for _ in range(24)]
         self.hracideska.insert(0, Bar("cerny"))
         self.hracideska.append(Bar("bily"))
-        self.bar_cerny = self.hracideska[0]
-        self.bar_bily = self.hracideska[25]
+        self.bar_cerny_cil_bily = self.hracideska[0]
+        self.bar_bily_cil_cerny = self.hracideska[25]
+        self.left_border = 1
+        self.right_border = 24
 
-    def napln_desku(self):
+    def napln_desku(self) -> None:
         for _ in range(2):
             self.hracideska[1].push(Kamen("cerny"))
         for _ in range(5):
@@ -31,15 +33,7 @@ class HraciDeska:
         for _ in range(5):
             self.hracideska[6].push(Kamen("bily"))
 
-    def napln_desku_debug(self):
-        self.hracideska[20].push(Kamen("cerny"))
-        self.hracideska[19].push(Kamen("cerny"))
-        self.hracideska[3].push(Kamen("bily"))
-        self.hracideska[5].push(Kamen("bily"))
-        self.hracideska[7].push(Kamen("bily"))
-        self.hracideska[9].push(Kamen("bily"))
-
-    def vypocti_mozne_kroky(self, kostka):
+    def vypocti_mozne_kroky(self, kostka: list) -> list:
         kroky = kostka.copy()
         if len(kroky) > 2:
             kroky = list(itertools.accumulate(kroky))
@@ -49,20 +43,21 @@ class HraciDeska:
             pass
         return kroky
     
-    def display_mozne_tahy(self, hrac, kroky):
+    def get_mozne_tahy(self, hrac, kroky: list) -> dict:
         smer = self.get_smer(hrac)
-
+        # klice jsou pozice odkud se da tahnout
         tahy = {}
         for i, pole in enumerate(self.hracideska):
             if pole == None:
                 continue
             elif pole.peek() == hrac.barva:
                 tahy[i] = []
+        # jestli je neco v baru tak muze tahnout jen z baru
         if 0 in tahy.keys():
             tahy = {0: []}
         elif 25 in tahy.keys():
             tahy = {25: []}
-
+        # do klicu se pridaji listi s moznymi tahy
         keys = list(tahy.keys()).copy()
         for start in keys:
             for vzdalenost in kroky:
@@ -76,33 +71,33 @@ class HraciDeska:
                 tahy.pop(start, None)
         return tahy
     
-    def move_kamen(self, hrac, zacatek, konec):
+    def move_kamen(self, hrac, zacatek: int, konec: int) -> None:
         if self.hracideska[konec].peek() == hrac.barva or self.hracideska[konec].peek() == "neutral":
             self.hracideska[konec].push(self.hracideska[zacatek].pop())
         else:
             if hrac.barva == "cerny":
-                self.bar_bily.push(self.hracideska[konec].pop())
+                self.bar_bily_cil_cerny.push(self.hracideska[konec].pop())
             else:
-                self.bar_cerny.push(self.hracideska[konec].pop())
+                self.bar_cerny_cil_bily.push(self.hracideska[konec].pop())
             self.hracideska[konec].push(self.hracideska[zacatek].pop())
 
-    def tah(self, zacatek, konec, kostka, hrac):
+    def tah(self, zacatek: int, konec: int, kostka: list, hrac) -> list:
         smer = self.get_smer(hrac)
         krok = abs(konec - zacatek)
         if krok in kostka:
-            self.move_kamen(zacatek, konec)
+            self.move_kamen(hrac, zacatek, konec)
             kostka.remove(krok)
         else:
             suma_dice = sum(kostka)
             while suma_dice - krok != sum(kostka):
                 temp = kostka.pop() * smer
-                self.move_kamen(zacatek, self.clamp(zacatek + temp))
+                self.move_kamen(hrac, zacatek ,self.clamp(zacatek + temp))
                 zacatek += temp
                 if zacatek > self.right_border or zacatek < self.left_border:
                     break
         return kostka
     
-    def check(self, hrac):
+    def check_vyvedeni(self, hrac) -> None:
         if hrac.barva == "cerny":
             if hrac.muzu_vyvest(self.hracideska):
                 print(hrac.barva + " muze vyvadet kameny")
@@ -120,62 +115,60 @@ class HraciDeska:
             self.left_border = 1
             return
         
-    def better_render(self):
-        print("  1 1 1")
-        print("  2 1 0 9 8 7   6 5 4 3 2 1")
-        print("╔═════════════╤═════════════╦══╗")
+    def render_hracipole(self) -> None:
+        print(" 12 11 10  9  8  7     6  5  4  3  2  1")
+        print("╔═══════════════════╤════════════════════╦══╗")
         start = 12
         end = 0
         step = 1
         start2 = 0
         end2 = 5
         border = 6
-        bar = self.bar_cerny
+        bar = self.bar_cerny_cil_bily
         for j in range(2):
             for i in range(start2, end2, step):
                 print("║ ", end="")
                 for index in range(start, end, -step):
                     if index == border:
-                        print("│", end=" ")
+                        print("│", end="  ")
                     if self.hracideska[index].length() > i:
-                        print(self.hracideska[index], end=" ")
+                        print(self.hracideska[index], end="  ")
                     else:
-                        print("∙", end=" ")
+                        print("∙", end="  ")
                 if i == 0:
                     print("║" + str(bar).rjust(2, " ") + "║")
                 else:
                     print("║  ║")
             if j == 0:
-                print("║             │             ╠══╣")
+                print("║                   │                    ╠══╣")
             start = 13
             end = 25
             step = -1
             start2 = 4
             end2 = -1
             border = 19
-            bar = self.bar_bily
-        print("╚═════════════╧═════════════╩══╝")
-        print("  1 1 1 1 1 1   1 2 2 2 2 2")
-        print("  3 4 5 6 7 8   9 0 1 2 3 4")
-        print("bar_bily: " + self.bar_bily.print_pole())
-        print("bar_cerny: " + self.bar_cerny.print_pole() + "\n")
+            bar = self.bar_bily_cil_cerny
+        print("╚═══════════════════╧════════════════════╩══╝")
+        print(" 13 14 15 16 17 18    19 20 21 22 23 24")
+        print("bar_bily: " + self.bar_bily_cil_cerny.print_pole())
+        print("bar_cerny: " + self.bar_cerny_cil_bily.print_pole() + "\n")
 
-    def gameover_check(self):
-        return self.bar_cerny.cil_length() >= 15 or self.bar_bily.cil_length() >= 15
+    def gameover_check(self) -> bool:
+        return self.bar_cerny_cil_bily.cil_length() >= 15 or self.bar_bily_cil_cerny.cil_length() >= 15
     
-    def eval_winner(self):
-        if self.bar_cerny.cil_length() >= self.pocet_kamenu_na_vyhru:
+    def evaluate_winner(self) -> None:
+        if self.bar_cerny_cil_bily.cil_length() >= 15:
             print("vyhral bily")
         else:
             print("vyhral cerny")
 
-    def get_smer(self, hrac):
+    def get_smer(self, hrac) -> int:
         if hrac.barva == "cerny":
             return 1
         else:
             return -1
         
-    def clamp(self, value):
+    def clamp(self, value: int) -> int:
         if value > 25:
             return 25
         elif value < 0:

@@ -1,5 +1,4 @@
 class Kamen:
-
     def __init__(self, barva) -> None:
         self.barva = barva
 

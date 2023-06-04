@@ -2,8 +2,8 @@ class HraciPole:
     def __init__(self) -> None:
         self._seznam = list()
 
-    def push(self, value):
-        self._seznam.append(value)
+    def push(self, object):
+        self._seznam.append(object)
 
     def pop(self):
         if len(self._seznam) == 0:
@@ -21,13 +21,7 @@ class HraciPole:
         return len(self._seznam)
         
     def __str__(self) -> str:
-        # if self.peek() == "cerny":
-        #     symbol = "o"
-        # else:
-        #     symbol = "●"
-        # return symbol * self.length()
         return str(self._seznam[-1])
-        #return str(list(map(str,self.__seznam))).replace("cerny", "o").replace("bily", "●")
 
     def print_pole(self):
         if self.peek() == "cerny":
@@ -42,11 +36,11 @@ class Bar(HraciPole):
         self.__cil = list()
         self.barva = barva
 
-    def push(self, value):
-        if value.get_barva() == self.barva:
-            self._seznam.append(value)
+    def push(self, object):
+        if object.get_barva() == self.barva:
+            self._seznam.append(object)
         else:
-            self.__cil.append(value)
+            self.__cil.append(object)
     
     def print_cil(self):
         if self.barva == "cerny":
