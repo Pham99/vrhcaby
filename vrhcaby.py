@@ -13,7 +13,7 @@ class Vrhcaby:
         self.kostka = Kostka(6)
         self.gameover = False
 
-    def dvojkostka(self) -> None:
+    def dvojkostka(self) -> list:
         kostka1 = self.kostka.hod_kostkou()
         kostka2 = self.kostka.hod_kostkou()
         if kostka1 == kostka2:
@@ -96,7 +96,7 @@ class Vrhcaby:
                 if vyber[0] not in mozne_tahy.keys() or vyber[1] not in mozne_tahy[vyber[0]]:
                     print("zadal jste spatne")
                     continue
-                kostky = self.hracideska.tah(vyber[0], vyber[1], kostky, current_player)
+                self.hracideska.tah(vyber[0], vyber[1], kostky, current_player)
                 input("press enter to continue")
                 os.system("cls")
             current_player = self.switch_players(current_player)

@@ -97,6 +97,13 @@ class HraciDeska:
                     break
         return kostka
     
+    def get_tallest_pole(self, start, end) -> int:
+        biggest = 0
+        for i in range(start, end + 1):
+            if self.hracideska[i].length() > biggest:
+                biggest = self.hracideska[i].length()
+        return biggest
+    
     def check_vyvedeni(self, hrac) -> None:
         if hrac.barva == "cerny":
             if hrac.muzu_vyvest(self.hracideska):
@@ -118,17 +125,14 @@ class HraciDeska:
     def render_hracipole(self) -> None:
         print(" 12 11 10  9  8  7     6  5  4  3  2  1")
         print("╔═══════════════════╤════════════════════╦══╗")
-        start = 12
-        end = 0
-        step = 1
-        start2 = 0
-        end2 = 5
+        vertical_scan = range(0, self.clamp(self.get_tallest_pole(1, 12), 5))
+        horizontal_scan = range(12, 0, -1)
         border = 6
         bar = self.bar_cerny_cil_bily
         for j in range(2):
-            for i in range(start2, end2, step):
+            for i in vertical_scan:
                 print("║ ", end="")
-                for index in range(start, end, -step):
+                for index in horizontal_scan:
                     if index == border:
                         print("│", end="  ")
                     if self.hracideska[index].length() > i:
@@ -141,11 +145,8 @@ class HraciDeska:
                     print("║  ║")
             if j == 0:
                 print("║                   │                    ╠══╣")
-            start = 13
-            end = 25
-            step = -1
-            start2 = 4
-            end2 = -1
+            vertical_scan = reversed(range(0 ,self.clamp(self.get_tallest_pole(13, 24), 5)))
+            horizontal_scan = range(13, 25)
             border = 19
             bar = self.bar_bily_cil_cerny
         print("╚═══════════════════╧════════════════════╩══╝")
@@ -168,10 +169,10 @@ class HraciDeska:
         else:
             return -1
         
-    def clamp(self, value: int) -> int:
-        if value > 25:
-            return 25
-        elif value < 0:
-            return 0
+    def clamp(self, value: int, min: int = 0, max: int = 25) -> int:
+        if value > max:
+            return max
+        elif value < min:
+            return min
         else:
             return value
