@@ -1,4 +1,5 @@
 import random
+import re
 
 class Hrac:
     def __init__(self, barva) -> None:
@@ -10,16 +11,22 @@ class Hrac:
             self.interval1 = 7
             self.interval2 = 26
         else:
-            raise ValueError
+            raise ValueError("Hráč musí být bílý nebo černý.")
         
     @property
     def barva(self):
         return self.__barva
 
     def play(self, mozne_tahy: dict) -> list:
-        vyber = input("Zadejte prikaz: ").split(" ")
-        return list(map(int, vyber))
-    
+        vyber = input("Zadejte prikaz: ").strip().lower()
+        vyber = re.sub("( +)", " ", vyber)
+        if vyber == "exit" or vyber == "save":
+            return vyber
+        elif bool(re.fullmatch("[\d]{1,2} [\d]{1,2}", vyber)):
+            return list(map(int, vyber.split(" ")))
+        else:
+            return "fail"
+
     def muzu_vyvest(self, hraci_deska):
         for pole in hraci_deska[self.interval1:self.interval2]:
             if pole.peek() == self.__barva:

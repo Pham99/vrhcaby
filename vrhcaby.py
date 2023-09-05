@@ -93,7 +93,18 @@ class Vrhcaby:
                     break
                 print(f"Mozne tahy: {mozne_tahy}")
                 vyber = current_player.play(mozne_tahy)
-                if vyber[0] not in mozne_tahy.keys() or vyber[1] not in mozne_tahy[vyber[0]]:
+                if isinstance(vyber, list):
+                    if vyber[0] not in mozne_tahy.keys() or vyber[1] not in mozne_tahy[vyber[0]]:
+                        print("zadal jste spatne")
+                        input("press enter to continue")
+                        os.system("cls")
+                        continue
+                elif vyber == "exit":
+                    os.system("cls")
+                    main()
+                elif vyber == "save":
+                    main()
+                else:
                     print("zadal jste spatne")
                     continue
                 self.hracideska.tah(vyber[0], vyber[1], kostky, current_player)
