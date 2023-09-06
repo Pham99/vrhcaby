@@ -12,6 +12,7 @@ class Hrac:
             self.interval2 = 26
         else:
             raise ValueError("Hráč musí být bílý nebo černý.")
+        self.isahuman = True
         
     @property
     def barva(self):
@@ -44,6 +45,7 @@ class Hrac:
 class Hrac_CPU(Hrac):
     def __init__(self, barva) -> None:
         super().__init__(barva)
+        self.isahuman = False
 
     def play(self, mozne_tahy: dict) -> list:
         kamen = random.choice(list(mozne_tahy.keys()))

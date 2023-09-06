@@ -17,6 +17,9 @@ class HraciPole:
         else:
             return "neutral"
         
+    def get_kamen(self):
+        return self._seznam[-1]
+        
     def length(self):
         return len(self._seznam)
         
@@ -29,6 +32,18 @@ class HraciPole:
         else:
             symbol = "●"
         return symbol * self.length()
+    
+    def __iter__(self):
+        self.n = 0
+        return self
+
+    def __next__(self):
+        if self.n <= len(self._seznam) - 1:
+            x = self._seznam[self.n]
+            self.n += 1
+            return x
+        else:
+            raise StopIteration
     
 class Bar(HraciPole):
     def __init__(self, barva) -> None:
@@ -57,6 +72,18 @@ class Bar(HraciPole):
     
     def __str__(self) -> str:
         return str(len(self.__cil))
+    
+    def __iter__(self):
+        self.n = 0
+        return self
+
+    def __next__(self):
+        if self.n <= len(self._seznam) - 1:
+            x = self._seznam[self.n]
+            self.n += 1
+            return x
+        else:
+            raise StopIteration
 
 def main():
     pass
