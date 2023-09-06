@@ -1,0 +1,253 @@
+{
+    "kameny": [
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                1,
+                0,
+                3,
+                6,
+                9,
+                12
+            ],
+            "kill_count": 1
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                1,
+                7,
+                10
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                6
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                6
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                6
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                6,
+                25
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                6,
+                5,
+                1
+            ],
+            "kill_count": 1
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                8
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                8,
+                2
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                8,
+                2
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                12
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                12
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                12
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                12
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                12,
+                14,
+                18
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                13
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                13
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                13
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                13
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                13
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                17
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                17
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                17
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                19
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                19
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                19
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                19
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "cerny",
+            "historie_pozic": [
+                19
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                24
+            ],
+            "kill_count": 0
+        },
+        {
+            "barva": "bily",
+            "historie_pozic": [
+                24
+            ],
+            "kill_count": 0
+        }
+    ],
+    "vrhcaby": [
+        {
+            "_Hrac__barva": "bily",
+            "interval1": 7,
+            "interval2": 26,
+            "isahuman": true
+        },
+        {
+            "_Hrac__barva": "cerny",
+            "interval1": 0,
+            "interval2": 19,
+            "isahuman": false
+        },
+        5,
+        [
+            1,
+            5
+        ],
+        {
+            "_Hrac__barva": "bily",
+            "interval1": 7,
+            "interval2": 26,
+            "isahuman": true
+        }
+    ]
+}
